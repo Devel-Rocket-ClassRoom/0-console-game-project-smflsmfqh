@@ -1,1 +1,1 @@
-new SnakeGame().Run();
+new RhythmGame().Run();

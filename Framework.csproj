@@ -6,6 +6,7 @@
     <LangVersion>9.0</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <UseExternalConsole>true</UseExternalConsole>
   </PropertyGroup>
 
 </Project>
