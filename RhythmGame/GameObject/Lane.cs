@@ -9,12 +9,11 @@ class Lane : GameObject
     private LinkedList<Note> _stagingNotes = new LinkedList<Note>();
     private LinkedList<Note> _printingNotes = new LinkedList<Note>();
     private LinkedList<(int X, int Y)> _printingNoteXY = new LinkedList<(int X, int Y)>();
+
     private int _laneId;
+
     private const int k_MatchedLineY = 21;
-
     private const float k_MoveInterval = 0.008f;
-    private float _moveTimer;
-
 
     public Lane(Scene scene, int lane, MusicNotes notes) : base(scene)
     {
@@ -37,7 +36,6 @@ class Lane : GameObject
 
     public void LookaheadNotes(int currentTime)
     {
-        
         int x = _laneId * 10 + 1;
         _printingNotes.Clear(); 
         _printingNoteXY.Clear();    
@@ -53,12 +51,11 @@ class Lane : GameObject
         foreach (Note note in _printingNotes)
         {
             int y = CalculateY(currentTime, note);
-            if (y >= 0)
+            if (y <= k_MatchedLineY)
             {
                 _printingNoteXY.AddLast((x, y));
             }
         }
-        
     }
 
     private int CalculateY(int currentTime, Note note)
@@ -78,14 +75,11 @@ class Lane : GameObject
         var node = _printingNoteXY.First;
         while (node != null)
         {
-            if (node.Value.Y >= 0)
+            if (node.Value.Y <= k_MatchedLineY)
             {
                 buffer.FillRect(node.Value.X, node.Value.Y, 8, 1, 'бс', ConsoleColor.White);
-                
+                node = node.Next;
             }
-            node = node.Next;
         }
-
     }
-
 }
