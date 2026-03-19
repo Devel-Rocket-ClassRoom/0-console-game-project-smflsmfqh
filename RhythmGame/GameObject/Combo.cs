@@ -11,9 +11,8 @@ class Combo : GameObject
     private int _bad;   
     private int _miss;
     private int j_scale;
-    private Queue<string> combos;
-    private string _lastJudge = "";
-
+    private ComboEnum _lastJudge = ComboEnum.None;
+    private int _displayTime = 0;
     private string[] _pArt =
     {
 
@@ -37,69 +36,61 @@ class Combo : GameObject
     public Combo(Scene scene) : base(scene)
     {
         Name = "Combo";
-        combos = new Queue<string>();
     }
 
-    public void CalculateCombo(int scale)
+    public void ReadyPritingCombo(ComboEnum combo)
     {
-        j_scale = scale;
+        _lastJudge = combo;
+        _displayTime = 500;
 
-        if (scale == -1)
+        if (combo == ComboEnum.Miss)
         {
-            combos.Enqueue(" ");
+            _miss++;
             return;
         }
-
-        if (scale > 150) 
-        { 
-            _miss++;
-            combos.Enqueue("Miss!");
-            return; 
-        }
-        
-        if (scale > 110) 
+        if (combo == ComboEnum.Perfect)
         {
-            _bad++; 
-            _score++;
-            combos.Enqueue("Bad!");
-            return; 
+            _perfect++;
+            _score += 10;
+            return;
         }
-        
-        if (scale >= 90) 
+        if (combo == ComboEnum.Good)
         {
-            _good++; 
-            _score++;
-            combos.Enqueue("Good!");
+            _good++;
+            _score += 5;
+            return;
+        }
+        if (combo == ComboEnum.Bad)
+        {
+            _bad++;
+            _score += 2;
             return; 
         }
-       
-
-        _perfect++; 
-        _score++;
-        combos.Enqueue("Perfect!!");   
-        return; 
     }
 
     public override void Update(float deltaTime)
     {
-        if (combos.Count != 0)
+        if (_displayTime > 0)
         {
-            _lastJudge = combos.Dequeue();
+            _displayTime -= (int)deltaTime * 1000;
         }
         
     }
     public override void Draw(ScreenBuffer buffer)
     {
-        buffer.WriteTextCentered(10, j_scale.ToString(), ConsoleColor.White);
-        if (_lastJudge == "Miss!")
+        if (_displayTime > 0)
         {
-            buffer.WriteText(20, 24, _lastJudge, ConsoleColor.Red);
+            if (_lastJudge == ComboEnum.Miss)
+            {
+                buffer.WriteText(18, 25, _lastJudge.ToString(), ConsoleColor.Red);
+            }
+            else buffer.WriteText(18, 25, _lastJudge.ToString(), ConsoleColor.Cyan);
+        }
 
-        }
-        else
-        {
-            buffer.WriteText(20, 24, _lastJudge, ConsoleColor.Cyan);
-        }
+        buffer.WriteText(42, 3, $"Score: {_score}", ConsoleColor.White);
+        buffer.WriteText(42, 5, $"Perfect Combo: {_perfect}", ConsoleColor.White);
+        buffer.WriteText(42, 6, $"Good Combo: {_good}", ConsoleColor.White);
+        buffer.WriteText(42, 7, $"Bad Combo: {_bad}", ConsoleColor.White);
            
     }
 }

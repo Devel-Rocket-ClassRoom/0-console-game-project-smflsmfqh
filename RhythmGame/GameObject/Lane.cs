@@ -3,24 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-// xÁÂÇ¥ ¹üÀ§ Lane 0: 1~9, Lane1: 11 ~ 19, Lane2: 20 ~ 29, Lane3: 30 ~ 39
+// xï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ Lane 0: 1~9, Lane1: 11 ~ 19, Lane2: 20 ~ 29, Lane3: 30 ~ 39
 class Lane : GameObject
 {
     private LinkedList<Note> _stagingNotes = new LinkedList<Note>();
-    private LinkedList<Note> _printingNotes = new LinkedList<Note>();
-    private LinkedList<(int X, int Y)> _printingNoteXY = new LinkedList<(int X, int Y)>();
+    private LinkedList<Note> _fallingNotes = new LinkedList<Note>();
+    private LinkedList<(int X, int Y)> _fallingNoteXY = new LinkedList<(int X, int Y)>();
 
     private int _laneId;
     public int LaneId { get { return _laneId; } }
-    public LinkedList<Note> FallingNotes { get { return _printingNotes; } }
-    
+    public LinkedList<Note> FallingNotes { get { return _fallingNotes; } }
+
     private const int k_MatchedLineY = 20;
     private const float k_MoveInterval = 0.008f;
 
     public Lane(Scene scene, int lane, MusicNotes notes) : base(scene)
     {
         Name = "Lane";
-        _laneId = lane; 
+        _laneId = lane;
         Initalize(_laneId, notes);
     }
 
@@ -39,65 +39,97 @@ class Lane : GameObject
     public LinkedList<Note> LookaheadNotes(int currentTime)
     {
         int x = _laneId * 10 + 1;
-        _printingNotes.Clear(); 
-        _printingNoteXY.Clear();    
 
-        foreach(Note note in _stagingNotes)
+        _fallingNotes.Clear();
+        _fallingNoteXY.Clear();
+
+        foreach (Note note in _stagingNotes)
         {
-            if (note.TargetTime <= currentTime + 3000 )
+            if (note.TargetTime <= currentTime + 3000)
             {
-                _printingNotes.AddLast(note);
+                _fallingNotes.AddLast(note);
             }
         }
 
-        foreach (Note note in _printingNotes)
+        foreach (Note note in _fallingNotes)
         {
-            int y = CalculateY(currentTime, note);
+            int y = (int)CalculateY(currentTime, note);
             if (y <= k_MatchedLineY)
             {
-                _printingNoteXY.AddLast((x, y));
+                _fallingNoteXY.AddLast((x, y));
             }
         }
-        return _printingNotes;
+        return _fallingNotes;
     }
 
-    private int CalculateY(int currentTime, Note note)
+    private float CalculateY(int currentTime, Note note)
     {
-        int y = (int)(k_MatchedLineY - (note.TargetTime - currentTime) * k_MoveInterval);
+        float y = (int)(k_MatchedLineY - (note.TargetTime - currentTime) * k_MoveInterval);
 
         return y;
     }
 
-    public int CalculateMatched(int currentTime)
+    public ComboEnum CalculateMatched(int currentTime)
     {
-        if (_printingNotes.Count != 0)
-        { 
-            int targetTime = _printingNotes.First.Value.TargetTime;
-            int scale = Math.Abs(targetTime - currentTime);
-            if (scale > 300) { return -1; }
-            if (scale < 150) 
-            {
-                _stagingNotes.Remove(_printingNotes.First.Value);
-                _printingNotes.RemoveFirst();
-            }
-            return scale;
+        ComboEnum result = ComboEnum.None;
+
+        if (_fallingNotes.Count == 0)
+        {
+            return result;
         }
-        return -1;
+
+        Note fallingNote = PeekAFallingNote();
+        float y = CalculateY(currentTime, fallingNote);
+        float scale = Math.Abs(y - k_MatchedLineY);
+        //int targetTime = fallingNote.TargetTime;
+        //int scale = Math.Abs(targetTime - currentTime);
+
+        if (scale > 2)
+        {
+            result = ComboEnum.None;
+            return result;
+        }
+        if (scale <= 0.5)
+        {
+            result = ComboEnum.Perfect;
+        }
+        else if (scale <= 1)
+        {
+            result = ComboEnum.Good;
+        }
+        else if (scale <= 1.5)
+        {
+            result = ComboEnum.Bad;
+        }
+        else
+        {
+            result = ComboEnum.Miss;
+        }
+
+        _stagingNotes.Remove(fallingNote);
+        _fallingNotes.RemoveFirst();
+
+        return result;
+    }
+  
+    public Note PeekAFallingNote()
+    {
+        return _fallingNotes.First.Value;
     }
 
     public override void Update(float deltaTime)
     {
-       
+
     }
 
     public override void Draw(ScreenBuffer buffer)
     {
-        var node = _printingNoteXY.First;
+        var node = _fallingNoteXY.First;
         while (node != null)
         {
             if (node.Value.Y <= k_MatchedLineY)
             {
-                buffer.FillRect(node.Value.X, node.Value.Y, 8, 1, '¡á', ConsoleColor.White);
+                buffer.FillRect(node.Value.X, node.Value.Y, 8, 1, 'â˜', ConsoleColor.White);
             }
             node = node.Next;
         }

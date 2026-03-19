@@ -4,8 +4,8 @@ using System;
 public class RhythmGame : GameApp
 {
     private readonly SceneManager<Scene> _scenes = new SceneManager<Scene>();
-    public RhythmGame() : base(55, 30) { }
-    public RhythmGame(int width, int height) : base(55, 30)
+    public RhythmGame() : base(61, 30) { }
+    public RhythmGame(int width, int height) : base(61, 30)
     {
         
     }

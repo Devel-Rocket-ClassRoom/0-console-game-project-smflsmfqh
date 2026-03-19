@@ -5,41 +5,30 @@ using System.Diagnostics;
 
 class PlayScene : Scene
 {
-    private Stage stage;
-    private Lane lane1;
-    private Lane lane2;
-    private Lane lane3;
-    private Lane lane4;
-    private MatchedLine matchedNote;
-    private Combo combo;
-
-    private int? _judgeCombo = null;
-
-    private MusicNotes notes = new MusicNotes();
-
-    private Stopwatch stopWatch = new Stopwatch();
-
+    private Stage _stage;
+    private Lane[] _lanes;
+    private ConsoleKey[] _laneKeys = { ConsoleKey.D, ConsoleKey.F, ConsoleKey.J, ConsoleKey.K };
+    private MatchedLine _matchedNote;
+    private Combo _combo;
+    private MusicNotes _notes = new MusicNotes();
+    private Stopwatch _stopWatch = new Stopwatch();
     public event GameAction PlayAgainRequested;
+
     public override void Load()
     {
-        stopWatch.Start();
-        stage = new Stage(this);
-        AddGameObject(stage);
+        _stopWatch.Start();
+        _stage = new Stage(this);
+        AddGameObject(_stage);
 
-        lane1 = new Lane(this, 0, notes);
-        AddGameObject(lane1);
-        lane2 = new Lane(this, 1, notes);
-        AddGameObject(lane2);
-        lane3 = new Lane(this, 2, notes);
-        AddGameObject(lane3);
-        lane4 = new Lane(this, 3, notes);
-        AddGameObject(lane4);
+        _matchedNote = new MatchedLine(this);
+        AddGameObject(_matchedNote);
 
-        matchedNote = new MatchedLine(this);
-        AddGameObject(matchedNote);
+        _combo = new Combo(this);
+        AddGameObject(_combo);
 
-        combo = new Combo(this);
-        AddGameObject(combo);
+        InitalizeLane(4);
+
+        
     }
 
     public override void Unload()
@@ -47,52 +36,39 @@ class PlayScene : Scene
         ClearGameObjects();
     }
 
-    private void HandlingInput()
+    private void InitalizeLane(int n)
     {
-        int currentTime = (int)stopWatch.ElapsedMilliseconds;
-
-        if (Input.IsKeyDown(ConsoleKey.D) )
+        _lanes = new Lane[n];
+        for (int i = 0; i < n; i++)
         {
-            _judgeCombo = lane1.CalculateMatched(currentTime);
-            return;
-        }
-        if (Input.IsKeyDown(ConsoleKey.F))
-        {
-            _judgeCombo = lane2.CalculateMatched(currentTime);
-            return;
-        }
-        if (Input.IsKeyDown(ConsoleKey.J))
-        {
-            _judgeCombo = lane3.CalculateMatched(currentTime);    
-            return;
-        }
-        if (Input.IsKeyDown(ConsoleKey.K))
-        {
-            _judgeCombo = lane4.CalculateMatched(currentTime);
-            return;
+            _lanes[i] = new Lane(this, i, _notes);
+            AddGameObject(_lanes[i]);
         }
     }
+    private void HandlingInput(int currentTime)
+    {
+        for (int i = 0; i < _lanes.Length; i++)
+        {
+            if (Input.IsKeyDown(_laneKeys[i]))
+            {
+                ComboEnum combo = _lanes[i].CalculateMatched(currentTime);
+                _combo.ReadyPritingCombo(combo);   
+            }
+        }
+    }
+
     public override void Update(float deltaTime)
     {
+        int currentTime = (int)_stopWatch.ElapsedMilliseconds;
+
         UpdateGameObjects(deltaTime);
 
-        Lane[] lanes = new Lane[]
-        {
-            lane1, lane2, lane3, lane4
-        };
-        int currentTime = (int)stopWatch.ElapsedMilliseconds;
-        foreach (Lane lane in lanes)
+        foreach (Lane lane in _lanes)
         {
             lane.LookaheadNotes(currentTime);
         }
+        HandlingInput(currentTime);
 
-        _judgeCombo = null;
-        HandlingInput();
-        if (_judgeCombo.HasValue)
-        {
-            combo.CalculateCombo(_judgeCombo.Value);
-        }
-       
     }
     public override void Draw(ScreenBuffer buffer)
     {

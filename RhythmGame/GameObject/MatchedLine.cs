@@ -42,7 +42,7 @@ class MatchedLine : GameObject
         {
             int x = _matchedKey * 10 + 1;
             buffer.DrawHLine(x, k_MatchedLineY, 9, '-', ConsoleColor.Magenta);
-            buffer.FillRect(x, k_MatchedLineY, 9, 1, '¡á', ConsoleColor.Magenta);
+            buffer.FillRect(x, k_MatchedLineY, 9, 1, 'â–¢', ConsoleColor.Magenta);
         }
     }
 }
