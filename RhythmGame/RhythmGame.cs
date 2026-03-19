@@ -4,8 +4,8 @@ using System;
 public class RhythmGame : GameApp
 {
     private readonly SceneManager<Scene> _scenes = new SceneManager<Scene>();
-    public RhythmGame() : base(90, 120) { }
-    public RhythmGame(int width, int height) : base(90, 120)
+    public RhythmGame() : base(55, 30) { }
+    public RhythmGame(int width, int height) : base(55, 30)
     {
         
     }
@@ -39,12 +39,17 @@ public class RhythmGame : GameApp
 
     private void ChangeToMenu()
     {
-
+        var menu = new MenuSelectScene();   
+        menu.BackToTitleRequested += ChangeToTitle;
+        menu.PlayRequested += ChangeToPlay;
+        _scenes.ChangeScene(menu);
     }
     
     private void ChangeToPlay()
     {
-        
+        var play = new PlayScene();
+        play.PlayAgainRequested += ChangeToMenu;
+        _scenes.ChangeScene(play);
     }
     
 }
