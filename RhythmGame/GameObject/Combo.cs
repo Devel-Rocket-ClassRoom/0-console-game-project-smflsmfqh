@@ -12,7 +12,7 @@ class Combo : GameObject
     private int _miss;
 
     private Queue<string> combos;
-    private string _lastJudge;
+    private string _lastJudge = "";
 
     private string[] _pArt =
     {
@@ -62,6 +62,10 @@ class Combo : GameObject
             combos.Enqueue("Good!");
             return; 
         }
+        if (scale == -1)
+        {
+            return;
+        }
 
         _perfect++; 
         _score++;
@@ -71,7 +75,10 @@ class Combo : GameObject
 
     public override void Update(float deltaTime)
     {
-        _lastJudge = combos.Dequeue();
+        if (combos.Count != 0)
+        {
+            _lastJudge = combos.Dequeue();
+        }
         
     }
     public override void Draw(ScreenBuffer buffer)

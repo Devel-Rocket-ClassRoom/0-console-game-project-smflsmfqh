@@ -1,5 +1,6 @@
 using Framework.Engine;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 class PlayScene : Scene
@@ -10,6 +11,7 @@ class PlayScene : Scene
     private Lane lane3;
     private Lane lane4;
     private MathcedNote matchedNote;
+    private Combo combo;
 
     private MusicNotes notes = new MusicNotes();
 
@@ -33,6 +35,9 @@ class PlayScene : Scene
 
         matchedNote = new MathcedNote(this);
         AddGameObject(matchedNote);
+
+        combo = new Combo(this);
+        AddGameObject(combo);
     }
 
     public override void Unload()
@@ -42,17 +47,18 @@ class PlayScene : Scene
 
     public override void Update(float deltaTime)
     {
+        UpdateGameObjects(deltaTime);
+
         Lane[] lanes = new Lane[]
         {
             lane1, lane2, lane3, lane4
         };
-
         int currentTime = (int)stopWatch.ElapsedMilliseconds;
         foreach (Lane lane in lanes)
         {
             lane.LookaheadNotes(currentTime);
         }
-        
+       
     }
     public override void Draw(ScreenBuffer buffer)
     {

@@ -11,7 +11,9 @@ class Lane : GameObject
     private LinkedList<(int X, int Y)> _printingNoteXY = new LinkedList<(int X, int Y)>();
 
     private int _laneId;
-
+    public int LaneId { get { return _laneId; } }
+    public LinkedList<Note> FallingNotes { get { return _printingNotes; } }
+    
     private const int k_MatchedLineY = 21;
     private const float k_MoveInterval = 0.008f;
 
@@ -34,7 +36,7 @@ class Lane : GameObject
         return _stagingNotes;
     }
 
-    public void LookaheadNotes(int currentTime)
+    public LinkedList<Note> LookaheadNotes(int currentTime)
     {
         int x = _laneId * 10 + 1;
         _printingNotes.Clear(); 
@@ -56,6 +58,7 @@ class Lane : GameObject
                 _printingNoteXY.AddLast((x, y));
             }
         }
+        return _printingNotes;
     }
 
     private int CalculateY(int currentTime, Note note)

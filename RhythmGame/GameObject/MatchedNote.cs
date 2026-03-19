@@ -13,21 +13,44 @@ class MathcedNote : GameObject
     {
 
     }
-
-    public int CalculateMatching(int currentTime, int targetTime)
+    /*
+    public int CalculateMatching(int lane, int currentTime, int targetTime)
     {
         int scale = targetTime - currentTime;
-        return Math.Abs(scale);
-    }
-
-    public override void Update(float deltaTime)
-    {
-
+        if (Input.IsKey(ConsoleKey.D))
+        {
+            if (lane == 0)
+            {
+                return Math.Abs(scale);
+            }
+        }
+        if (Input.IsKey(ConsoleKey.F))
+        {
+            if (lane == 1)
+            {
+                return Math.Abs(scale); 
+            }
+        }
+        if (Input.IsKey(ConsoleKey.G))
+        {
+            if (lane == 2)
+            {
+                return Math.Abs(scale);
+            }
+        }
+        if (Input.IsKey(ConsoleKey.H))
+        {
+            if (lane == 3)
+            {
+                return Math.Abs(scale);
+            }
+        }
+        return -1;
         
     }
-
-    public override void Draw(ScreenBuffer buffer)
-    {
+    */
+    public override void Update(float deltaTime)
+    { 
         _matchedKey = -1;
 
         if (Input.IsKey(ConsoleKey.D))
@@ -46,7 +69,11 @@ class MathcedNote : GameObject
         {
             _matchedKey = 3;
         }
+    }
 
+    public override void Draw(ScreenBuffer buffer)
+    {
+       
         buffer.DrawHLine(1, k_MatchedLineY, 39, '-', ConsoleColor.White);
        
         if (_matchedKey != -1)
