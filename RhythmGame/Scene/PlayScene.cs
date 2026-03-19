@@ -10,8 +10,10 @@ class PlayScene : Scene
     private Lane lane2;
     private Lane lane3;
     private Lane lane4;
-    private MathcedNote matchedNote;
+    private UserNote matchedNote;
     private Combo combo;
+
+    private int _judgeCombo = -1;
 
     private MusicNotes notes = new MusicNotes();
 
@@ -33,7 +35,7 @@ class PlayScene : Scene
         lane4 = new Lane(this, 3, notes);
         AddGameObject(lane4);
 
-        matchedNote = new MathcedNote(this);
+        matchedNote = new UserNote(this);
         AddGameObject(matchedNote);
 
         combo = new Combo(this);
@@ -45,9 +47,37 @@ class PlayScene : Scene
         ClearGameObjects();
     }
 
+    private void HandlingInput()
+    {
+        int currentTime = (int)stopWatch.ElapsedMilliseconds;
+
+        if (Input.IsKey(ConsoleKey.D) )
+        {
+            _judgeCombo = lane1.CalculateMatched(currentTime);
+            return;
+        }
+        if (Input.IsKey(ConsoleKey.F))
+        {
+            _judgeCombo = lane2.CalculateMatched(currentTime);
+            return;
+        }
+        if (Input.IsKey(ConsoleKey.G))
+        {
+            _judgeCombo = lane3.CalculateMatched(currentTime);    
+            return;
+        }
+        if (Input.IsKey(ConsoleKey.H))
+        {
+            _judgeCombo = lane4.CalculateMatched(currentTime);
+            return;
+        }
+    }
     public override void Update(float deltaTime)
     {
         UpdateGameObjects(deltaTime);
+
+        HandlingInput();
+        combo.CalculateCombo(_judgeCombo);
 
         Lane[] lanes = new Lane[]
         {

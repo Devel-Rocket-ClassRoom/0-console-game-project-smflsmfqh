@@ -68,6 +68,17 @@ class Lane : GameObject
         return y;
     }
 
+    public int CalculateMatched(int currentTime)
+    {
+        if (_printingNotes.Count != 0 && _printingNoteXY.Count != 0) // && _printingNoteXY.First.Value.Y <= k_MatchedLineY
+        {
+            int targetTime = _printingNotes.First.Value.TargetTime;
+            int scale = targetTime - currentTime;
+            return Math.Abs(scale);
+        }
+        return -1;
+    }
+
     public override void Update(float deltaTime)
     {
        

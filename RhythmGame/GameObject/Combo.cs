@@ -48,6 +48,7 @@ class Combo : GameObject
             combos.Enqueue("Miss!");
             return; 
         }
+        
         if (scale > 80) 
         {
             _bad++; 
@@ -55,7 +56,8 @@ class Combo : GameObject
             combos.Enqueue("Bad!");
             return; 
         }
-        if (scale >= 40) 
+        
+        if (scale >= 60) 
         {
             _good++; 
             _score++;
@@ -83,10 +85,13 @@ class Combo : GameObject
     }
     public override void Draw(ScreenBuffer buffer)
     {
-        ConsoleColor fg = ConsoleColor.Cyan;
         
-        if (_lastJudge == "Miss") { fg = ConsoleColor.Red; }
-        buffer.WriteTextCentered(24, _lastJudge, fg);
+        if (_lastJudge == "Miss") 
+        {
+        buffer.WriteTextCentered(24, _lastJudge, ConsoleColor.Red);
+
+        }
+        buffer.WriteTextCentered(24, _lastJudge, ConsoleColor.Cyan);
            
     }
 }
