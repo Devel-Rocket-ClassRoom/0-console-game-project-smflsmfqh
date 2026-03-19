@@ -2,41 +2,62 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+// 임의로 하드 코딩 -> 여유 있으면 음악별로 노트 데이터파일 만들기
 class MusicNotes
 {
-    private Note[] notes =
+    private Note[] notes = new[]
     {
-        new Note { TargetTime = 500,  lane = 0 },
-        new Note { TargetTime = 500,  lane = 2 },
-        new Note { time = 1000, lane = 1 },
-        new Note { time = 1000, lane = 3 },
-        new Note { time = 1500, lane = 0 },
-        new Note { time = 2000, lane = 2 },
-        new Note { time = 2000, lane = 1 },
-        new Note { time = 2500, lane = 3 },
-        new Note { time = 3000, lane = 0 },
-        new Note { time = 3000, lane = 2 },
-        new Note { time = 3500, lane = 1 },
-        new Note { time = 4000, lane = 0 },
-        new Note { time = 4000, lane = 1 },
-        new Note { time = 4000, lane = 2 },
-        new Note { time = 4000, lane = 3 },
-        new Note { time = 4500, lane = 2 },
-        new Note { time = 5000, lane = 3 },
-        new Note { time = 5500, lane = 0 },
-        new Note { time = 5500, lane = 1 },
-        new Note { time = 6000, lane = 2 },
-        new Note { time = 6500, lane = 3 },
-        new Note { time = 7000, lane = 0 },
-        new Note { time = 7000, lane = 2 },
-        new Note { time = 7500, lane = 1 },
-        new Note { time = 8000, lane = 0 },
-        new Note { time = 8000, lane = 1 },
-        new Note { time = 8000, lane = 2 },
-        new Note { time = 8000, lane = 3 },
-    }
+        new Note { TargetTime = 500,  LaneId = 0 },
+        new Note { TargetTime = 500,  LaneId = 2 },
+        new Note { TargetTime = 1000, LaneId = 1 },
+        new Note { TargetTime = 1000, LaneId = 3 },
+        new Note { TargetTime = 1500, LaneId = 0 },
+        new Note { TargetTime = 2000, LaneId = 2 },
+        new Note { TargetTime = 2000, LaneId = 1 },
+        new Note { TargetTime = 2500, LaneId = 3 },
+        new Note { TargetTime = 3000, LaneId = 0 },
+        new Note { TargetTime = 3000, LaneId = 2 },
+        new Note { TargetTime = 3500, LaneId = 1 },
+        new Note { TargetTime = 4000, LaneId = 0 },
+        new Note { TargetTime = 4000, LaneId = 1 },
+        new Note { TargetTime = 4000, LaneId = 2 },
+        new Note { TargetTime = 4000, LaneId = 3 },
+        new Note { TargetTime = 4500, LaneId = 2 },
+        new Note { TargetTime = 5000, LaneId = 3 },
+        new Note { TargetTime = 5500, LaneId = 0 },
+        new Note { TargetTime = 5500, LaneId = 1 },
+        new Note { TargetTime = 6000, LaneId = 2 },
+        new Note { TargetTime = 6500, LaneId = 3 },
+        new Note { TargetTime = 7000, LaneId = 0 },
+        new Note { TargetTime = 7000, LaneId = 2 },
+        new Note { TargetTime = 7500, LaneId = 1 },
+        new Note { TargetTime = 8000, LaneId = 0 },
+        new Note { TargetTime = 8000, LaneId = 1 },
+        new Note { TargetTime = 8000, LaneId = 2 },
+        new Note { TargetTime = 8000, LaneId = 3 },
+    };
     private Queue<Note> _musicNotes;
+    public Queue<Note> Notes { get { return _musicNotes; } }
 
+    public MusicNotes()
+    {
+        _musicNotes = new Queue<Note>(notes.Length);
+        foreach (Note note in notes)
+        {
+            _musicNotes.Enqueue(note);
+        }
+    }
+    public Note Peek()
+    {
+        return _musicNotes.Peek(); 
+    }
 
+    public IEnumerator GetEnumerator()
+    {
+        foreach (var note in  _musicNotes)
+        {
+            yield return note;  
+        }
+    }
 
 }
