@@ -35,7 +35,7 @@ namespace Framework.Engine
 
             // 영문자
             ConsoleKey.H, ConsoleKey.S, ConsoleKey.Y, ConsoleKey.N,
-            ConsoleKey.W, ConsoleKey.A, ConsoleKey.D,
+            ConsoleKey.W, ConsoleKey.A, ConsoleKey.D, ConsoleKey.F, ConsoleKey.G, ConsoleKey.H,
         };
 
         public static bool HasInput => s_currentKeys.Count > 0;

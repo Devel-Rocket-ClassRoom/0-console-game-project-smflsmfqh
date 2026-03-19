@@ -15,7 +15,7 @@ class Stage : GameObject
     public override void Draw(ScreenBuffer buffer)
     {
         buffer.DrawBox(0, 0, 54, 29, ConsoleColor.White);
-        buffer.DrawHLine(1, 21, 39, '-', ConsoleColor.White);
+        //buffer.DrawHLine(1, 21, 39, '-', ConsoleColor.White);
         buffer.DrawVLine(40, 1, 27, '|', ConsoleColor.White);
         buffer.DrawVLine(10, 1, 20, '|', ConsoleColor.White);
         buffer.DrawVLine(20, 1, 20, '|', ConsoleColor.White);

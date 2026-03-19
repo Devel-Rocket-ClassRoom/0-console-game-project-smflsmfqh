@@ -9,6 +9,7 @@ class PlayScene : Scene
     private Lane lane2;
     private Lane lane3;
     private Lane lane4;
+    private MathcedNote matchedNote;
 
     private MusicNotes notes = new MusicNotes();
 
@@ -30,8 +31,8 @@ class PlayScene : Scene
         lane4 = new Lane(this, 3, notes);
         AddGameObject(lane4);
 
-
-
+        matchedNote = new MathcedNote(this);
+        AddGameObject(matchedNote);
     }
 
     public override void Unload()
