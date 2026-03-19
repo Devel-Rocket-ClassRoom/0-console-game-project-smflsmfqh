@@ -166,7 +166,7 @@ namespace Framework.Engine
             {
                 for (int x = 0; x < _width; x++)
                 {
-                    if (y == _height - 1 && x == _width - 1) continue; // 추가: Mac OS용
+                     
                     ConsoleColor fg = _fgColors[y, x];
                     ConsoleColor bg = _bgColors[y, x];
 
