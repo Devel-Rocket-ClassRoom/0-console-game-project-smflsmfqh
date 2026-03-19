@@ -10,10 +10,10 @@ class PlayScene : Scene
     private Lane lane2;
     private Lane lane3;
     private Lane lane4;
-    private UserNote matchedNote;
+    private MatchedLine matchedNote;
     private Combo combo;
 
-    private int _judgeCombo = -1;
+    private int? _judgeCombo = null;
 
     private MusicNotes notes = new MusicNotes();
 
@@ -35,7 +35,7 @@ class PlayScene : Scene
         lane4 = new Lane(this, 3, notes);
         AddGameObject(lane4);
 
-        matchedNote = new UserNote(this);
+        matchedNote = new MatchedLine(this);
         AddGameObject(matchedNote);
 
         combo = new Combo(this);
@@ -51,22 +51,22 @@ class PlayScene : Scene
     {
         int currentTime = (int)stopWatch.ElapsedMilliseconds;
 
-        if (Input.IsKey(ConsoleKey.D) )
+        if (Input.IsKeyDown(ConsoleKey.D) )
         {
             _judgeCombo = lane1.CalculateMatched(currentTime);
             return;
         }
-        if (Input.IsKey(ConsoleKey.F))
+        if (Input.IsKeyDown(ConsoleKey.F))
         {
             _judgeCombo = lane2.CalculateMatched(currentTime);
             return;
         }
-        if (Input.IsKey(ConsoleKey.G))
+        if (Input.IsKeyDown(ConsoleKey.J))
         {
             _judgeCombo = lane3.CalculateMatched(currentTime);    
             return;
         }
-        if (Input.IsKey(ConsoleKey.H))
+        if (Input.IsKeyDown(ConsoleKey.K))
         {
             _judgeCombo = lane4.CalculateMatched(currentTime);
             return;
@@ -76,9 +76,6 @@ class PlayScene : Scene
     {
         UpdateGameObjects(deltaTime);
 
-        HandlingInput();
-        combo.CalculateCombo(_judgeCombo);
-
         Lane[] lanes = new Lane[]
         {
             lane1, lane2, lane3, lane4
@@ -87,6 +84,13 @@ class PlayScene : Scene
         foreach (Lane lane in lanes)
         {
             lane.LookaheadNotes(currentTime);
+        }
+
+        _judgeCombo = null;
+        HandlingInput();
+        if (_judgeCombo.HasValue)
+        {
+            combo.CalculateCombo(_judgeCombo.Value);
         }
        
     }

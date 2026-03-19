@@ -10,7 +10,7 @@ class Combo : GameObject
     private int _good;
     private int _bad;   
     private int _miss;
-
+    private int j_scale;
     private Queue<string> combos;
     private string _lastJudge = "";
 
@@ -42,14 +42,22 @@ class Combo : GameObject
 
     public void CalculateCombo(int scale)
     {
-        if (scale > 120) 
+        j_scale = scale;
+
+        if (scale == -1)
+        {
+            combos.Enqueue(" ");
+            return;
+        }
+
+        if (scale > 150) 
         { 
             _miss++;
             combos.Enqueue("Miss!");
             return; 
         }
         
-        if (scale > 80) 
+        if (scale > 110) 
         {
             _bad++; 
             _score++;
@@ -57,17 +65,14 @@ class Combo : GameObject
             return; 
         }
         
-        if (scale >= 60) 
+        if (scale >= 90) 
         {
             _good++; 
             _score++;
             combos.Enqueue("Good!");
             return; 
         }
-        if (scale == -1)
-        {
-            return;
-        }
+       
 
         _perfect++; 
         _score++;
@@ -85,13 +90,16 @@ class Combo : GameObject
     }
     public override void Draw(ScreenBuffer buffer)
     {
-        
-        if (_lastJudge == "Miss") 
+        buffer.WriteTextCentered(10, j_scale.ToString(), ConsoleColor.White);
+        if (_lastJudge == "Miss!")
         {
-        buffer.WriteTextCentered(24, _lastJudge, ConsoleColor.Red);
+            buffer.WriteText(20, 24, _lastJudge, ConsoleColor.Red);
 
         }
-        buffer.WriteTextCentered(24, _lastJudge, ConsoleColor.Cyan);
+        else
+        {
+            buffer.WriteText(20, 24, _lastJudge, ConsoleColor.Cyan);
+        }
            
     }
 }

@@ -1,12 +1,12 @@
 using Framework.Engine;
 using System;
 
-class UserNote : GameObject
+class MatchedLine : GameObject
 {
     private const int k_MatchedLineY = 21;
     private int _matchedKey;
     public int MatchedKey { get { return _matchedKey; } }
-    public UserNote(Scene scene) : base(scene)
+    public MatchedLine(Scene scene) : base(scene)
     {
 
     }
@@ -22,11 +22,11 @@ class UserNote : GameObject
         {
             _matchedKey = 1;
         }
-        if (Input.IsKey(ConsoleKey.G))
+        if (Input.IsKey(ConsoleKey.J))
         {
             _matchedKey = 2;
         }
-        if (Input.IsKey(ConsoleKey.H))
+        if (Input.IsKey(ConsoleKey.K))
         {
             _matchedKey = 3;
         }
@@ -36,7 +36,8 @@ class UserNote : GameObject
     {
        
         buffer.DrawHLine(1, k_MatchedLineY, 39, '-', ConsoleColor.White);
-       
+        buffer.FillRect(1, k_MatchedLineY, 39, 1, ' ', ConsoleColor.White, ConsoleColor.Yellow);
+
         if (_matchedKey != -1)
         {
             int x = _matchedKey * 10 + 1;

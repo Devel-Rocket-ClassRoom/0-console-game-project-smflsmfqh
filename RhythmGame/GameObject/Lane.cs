@@ -14,7 +14,7 @@ class Lane : GameObject
     public int LaneId { get { return _laneId; } }
     public LinkedList<Note> FallingNotes { get { return _printingNotes; } }
     
-    private const int k_MatchedLineY = 21;
+    private const int k_MatchedLineY = 20;
     private const float k_MoveInterval = 0.008f;
 
     public Lane(Scene scene, int lane, MusicNotes notes) : base(scene)
@@ -70,11 +70,17 @@ class Lane : GameObject
 
     public int CalculateMatched(int currentTime)
     {
-        if (_printingNotes.Count != 0 && _printingNoteXY.Count != 0) // && _printingNoteXY.First.Value.Y <= k_MatchedLineY
-        {
+        if (_printingNotes.Count != 0)
+        { 
             int targetTime = _printingNotes.First.Value.TargetTime;
-            int scale = targetTime - currentTime;
-            return Math.Abs(scale);
+            int scale = Math.Abs(targetTime - currentTime);
+            if (scale > 300) { return -1; }
+            if (scale < 150) 
+            {
+                _stagingNotes.Remove(_printingNotes.First.Value);
+                _printingNotes.RemoveFirst();
+            }
+            return scale;
         }
         return -1;
     }
@@ -92,8 +98,8 @@ class Lane : GameObject
             if (node.Value.Y <= k_MatchedLineY)
             {
                 buffer.FillRect(node.Value.X, node.Value.Y, 8, 1, 'бс', ConsoleColor.White);
-                node = node.Next;
             }
+            node = node.Next;
         }
     }
 }
