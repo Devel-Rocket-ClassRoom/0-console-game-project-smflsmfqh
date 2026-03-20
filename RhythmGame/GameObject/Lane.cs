@@ -16,8 +16,8 @@ class Lane : GameObject
     private const int k_MatchedLineY = 20;
     private const float k_MoveInterval = 0.017f;
 
-    private float keyOmissscale;
-    private float keyXmissscale;
+    //private float keyOmissscale;
+    //private float keyXmissscale;
 
     public Lane(Scene scene, int lane, int musicIndex) : base(scene)
     {
@@ -85,7 +85,7 @@ class Lane : GameObject
         int scale = Math.Abs(currentTime - fallingNote.TargetTime);
         float yScale = Math.Abs(k_MatchedLineY - y);
 
-        if (scale > 220) // yScale > 2.2
+        if (scale > 220) 
         {
             result = ComboEnum.None;
             return result;
@@ -105,8 +105,8 @@ class Lane : GameObject
         else
         {
             result = ComboEnum.Miss;
-            keyOmissscale = scale;
-            //y_missscale = yScale;
+            //keyOmissscale = scale;
+            
         }
 
         _stagingNotes.Remove(fallingNote);
@@ -119,9 +119,7 @@ class Lane : GameObject
     {
         if (_fallingNotes.Count == 0) { return ComboEnum.None; }
         Note fallingNote = PeekAFallingNote();
-        //float y = CalculateY(currentTime, fallingNote);
         int scale = currentTime - fallingNote.TargetTime;
-        //float yScale = k_MatchedLineY - y;
 
         ComboEnum comboEnum = ComboEnum.None;
        
@@ -130,7 +128,7 @@ class Lane : GameObject
             _stagingNotes.Remove(fallingNote);
             _fallingNotes.RemoveFirst();
             comboEnum = ComboEnum.Miss;
-            keyXmissscale = scale;
+           // keyXmissscale = scale;
             
         }
         
@@ -162,8 +160,8 @@ class Lane : GameObject
             }
             node = node.Next;
         }
-        buffer.WriteTextCentered(10, keyOmissscale.ToString(), ConsoleColor.White);
-        buffer.WriteTextCentered(11, keyXmissscale.ToString(), ConsoleColor.White);
+        //buffer.WriteTextCentered(10, keyOmissscale.ToString(), ConsoleColor.White);
+       // buffer.WriteTextCentered(11, keyXmissscale.ToString(), ConsoleColor.White);
 
 
     }
