@@ -21,16 +21,16 @@ namespace Framework.Engine
             switch(sound)
             {
                 case sounds.Title:
-                    audioFilePath = "C:\\Users\\skyee\\Documents\\GitHub\\0-console-game-project-smflsmfqh\\RhythmGame\\Assets\\0titleMusic.wav";
+                    audioFilePath = "RhythmGame\\Assets\\0titleMusic.wav";
                     break;
                 case sounds.Chopstick:
-                    audioFilePath = "C:\\Users\\skyee\\Documents\\GitHub\\0-console-game-project-smflsmfqh\\RhythmGame\\Assets\\1chopstick.wav";
+                    audioFilePath = "RhythmGame\\Assets\\1chopstick.wav";
                     break;
                 case sounds.Moonlight:
-                    audioFilePath = "C:\\Users\\skyee\\Documents\\GitHub\\0-console-game-project-smflsmfqh\\RhythmGame\\Assets\\2moonlight.wav";
+                    audioFilePath = "RhythmGame\\Assets\\2moonlight.wav";
                     break;
                 case sounds.Menu:
-                    audioFilePath = "C:\\Users\\skyee\\Documents\\GitHub\\0-console-game-project-smflsmfqh\\RhythmGame\\Assets\\3menuSelect.wav";
+                    audioFilePath = "RhythmGame\\Assets\\3menuSelect.wav";
                     break;
             }
 

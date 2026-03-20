@@ -10,6 +10,9 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<Content Include="RhythmGame\Assets\**\*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<PackageReference Include="NAudio" Version="2.2.1" />
 	</ItemGroup>
 
