@@ -10,7 +10,7 @@ class Combo : GameObject
     private int _good;
     private int _bad;   
     private int _miss;
-    private int j_scale;
+   
     private ComboEnum _lastJudge = ComboEnum.None;
     private int _displayTime = 0;
     private string[] perfect = {
@@ -40,10 +40,23 @@ class Combo : GameObject
     @" |_|  |_|_/__/__(_)",
     };
 
-
+    public int Score { get { return _score; } private set { } }
     public Combo(Scene scene) : base(scene)
     {
         Name = "Combo";
+    }
+
+    private int ScaleScore()
+    {
+        if (_score > 100)
+        {
+            _score = 100;
+        }
+        else if (_score < 0)
+        {
+            _score = 0;
+        }
+        return _score;
     }
 
     public void ReadyPritingCombo(ComboEnum combo)
@@ -55,24 +68,28 @@ class Combo : GameObject
         {
             _miss++;
             _score -= 5;
+            ScaleScore();
             return;
         }
         if (combo == ComboEnum.Perfect)
         {
             _perfect++;
-            _score += 10;
+            _score += 7;
+            ScaleScore();
             return;
         }
         if (combo == ComboEnum.Good)
         {
             _good++;
-            _score += 5;
+            _score += 4;
+            ScaleScore();
             return;
         }
         if (combo == ComboEnum.Bad)
         {
             _bad++;
             _score += 2;
+            ScaleScore();
             return; 
         }
     }

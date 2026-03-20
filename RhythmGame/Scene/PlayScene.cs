@@ -6,12 +6,16 @@ using System.Diagnostics;
 class PlayScene : Scene
 {
     private Stage _stage;
+
     private Lane[] _lanes;
     private ConsoleKey[] _laneKeys = { ConsoleKey.D, ConsoleKey.F, ConsoleKey.J, ConsoleKey.K };
+
     private MatchedLine _matchedNote;
     private Combo _combo;
     private MusicNotes _notes = new MusicNotes();
     private Stopwatch _stopWatch = new Stopwatch();
+    private HealthBar _healthBar;
+
     public event GameAction PlayAgainRequested;
 
     public override void Load()
@@ -27,6 +31,9 @@ class PlayScene : Scene
         AddGameObject(_combo);
 
         InitalizeLane(4);    
+
+        _healthBar = new HealthBar(this);   
+        AddGameObject(_healthBar);
     }
 
     public override void Unload()
@@ -64,7 +71,7 @@ class PlayScene : Scene
                     _combo.ReadyPritingCombo(combo);
                 }
             }
-           
+            _healthBar.ScaleHealth(_combo.Score);
         }
     }
 
