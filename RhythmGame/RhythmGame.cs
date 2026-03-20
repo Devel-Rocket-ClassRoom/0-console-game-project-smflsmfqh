@@ -45,11 +45,20 @@ public class RhythmGame : GameApp
         _scenes.ChangeScene(menu);
     }
     
-    private void ChangeToPlay()
+    private void ChangeToPlay(int index)
     {
-        var play = new PlayScene();
-        play.PlayAgainRequested += ChangeToMenu;
+        var play = new PlayScene(index);
+        //play.PlayAgainRequested += ChangeToPlay;
+        play.GameOverRequested += ChangeToGameOver; 
         _scenes.ChangeScene(play);
+    }
+
+    private void ChangeToGameOver(int index)
+    {
+        var gameOver = new GameOverScene(index);
+        gameOver.BackToMenuRequested += ChangeToMenu;
+        gameOver.PlayAgainRequested += ChangeToPlay;
+        _scenes.ChangeScene(gameOver);
     }
     
 }

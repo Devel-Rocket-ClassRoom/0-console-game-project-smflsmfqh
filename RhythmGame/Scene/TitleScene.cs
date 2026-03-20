@@ -5,6 +5,7 @@ using System.Collections.Generic;
 class TitleScene : Scene
 {
     public event GameAction StartRequested;
+    private WAVPlayer player;
 
     private string[] _mainTitle =
     {
@@ -45,12 +46,16 @@ class TitleScene : Scene
 
     public override void Load()
     {
-        
+        player = new WAVPlayer(sounds.Title);
+        player.PlayLooping();
     }
 
     public override void Unload()
     {
-        
+        player.Stop();
+        player.Dispose();
+        ClearGameObjects();
+
     }
 
     public override void Update(float deltaTime)

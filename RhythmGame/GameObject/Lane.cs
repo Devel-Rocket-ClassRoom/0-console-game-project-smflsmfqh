@@ -10,7 +10,7 @@ class Lane : GameObject
     private LinkedList<Note> _fallingNotes = new LinkedList<Note>();
 
     private int _laneId;
-    //public int LaneId { get { return _laneId; } }
+    public int Count { get { return _stagingNotes.Count; } }
 
     private const int k_MatchedLineY = 20;
     private const float k_MoveInterval = 0.008f;

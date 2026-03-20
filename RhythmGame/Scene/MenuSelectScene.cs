@@ -1,20 +1,27 @@
 using Framework.Engine;
+using NAudio.MediaFoundation;
 using System;
 
 class MenuSelectScene : Scene
 {
     private Menu menu;
-    public event GameAction PlayRequested;
+    private WAVPlayer _player;
+    public event GameAction<int> PlayRequested;
     public event GameAction BackToTitleRequested;
     
     public override void Load()
     {
         menu = new Menu(this);
-        AddGameObject(menu);    
+        AddGameObject(menu);
+
+        _player = new WAVPlayer(sounds.Title);
+        _player.PlayLooping();
     }
 
     public override void Unload()
     {
+        _player.Stop();
+        _player.Dispose();
         ClearGameObjects();
     }
 
@@ -26,12 +33,13 @@ class MenuSelectScene : Scene
         {
             if (menu.SelectedIndex == 0 )
             {
-                PlayRequested?.Invoke();
+                PlayRequested?.Invoke(menu.SelectedIndex);
                 return;
             }
             if (menu.SelectedIndex == 1 )
             {
-                PlayRequested?.Invoke();
+
+                PlayRequested?.Invoke(menu.SelectedIndex);
                 return;
             }
             if (menu.SelectedIndex == 2)

@@ -2,6 +2,7 @@ using Framework.Engine;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 class PlayScene : Scene
 {
@@ -15,9 +16,18 @@ class PlayScene : Scene
     private MusicNotes _notes = new MusicNotes();
     private Stopwatch _stopWatch = new Stopwatch();
     private HealthBar _healthBar;
+    private WAVPlayer _player;
+    private bool isGameOver;
 
-    public event GameAction PlayAgainRequested;
+    private int _selectedMusic;
 
+    public event GameAction<int> PlayAgainRequested;
+    public event GameAction<int> GameOverRequested;
+
+    public PlayScene(int index)
+    {
+        _selectedMusic = index; 
+    }
     public override void Load()
     {
         _stopWatch.Start();
@@ -34,10 +44,24 @@ class PlayScene : Scene
 
         _healthBar = new HealthBar(this);   
         AddGameObject(_healthBar);
+
+        
+        if (_selectedMusic == 0)
+        {
+            _player = new WAVPlayer(sounds.Chopstick);
+        }
+        else if (_selectedMusic == 1)
+        {
+            _player = new WAVPlayer(sounds.Moonlight);
+        }
+        _player.Play();
+
     }
 
     public override void Unload()
     {
+        _player.Stop();
+        _player.Dispose();
         ClearGameObjects();
     }
 
@@ -50,6 +74,24 @@ class PlayScene : Scene
             AddGameObject(_lanes[i]);
         }
     }
+
+    private bool IsStageEmpty()
+    {
+        int empty = 0;
+        foreach (Lane lane in _lanes)
+        {
+            if (lane.Count == 0)
+            {
+                empty++;
+            }
+        }
+        if (empty == 4)
+        {
+            isGameOver = true;
+        }
+        return isGameOver;
+    }
+
     private void HandlingInput(int currentTime)
     {
         ComboEnum combo;
@@ -77,6 +119,13 @@ class PlayScene : Scene
 
     public override void Update(float deltaTime)
     {
+        if (isGameOver)
+        {
+            Thread.Sleep(2000);
+            GameOverRequested?.Invoke(_selectedMusic);
+            return;
+        }
+
         int currentTime = (int)_stopWatch.ElapsedMilliseconds;
 
         UpdateGameObjects(deltaTime);
@@ -86,10 +135,12 @@ class PlayScene : Scene
             lane.LookaheadNotes(currentTime);
         }
         HandlingInput(currentTime);
+        IsStageEmpty();
 
     }
     public override void Draw(ScreenBuffer buffer)
     {
-        DrawGameObjects(buffer);    
+        DrawGameObjects(buffer);
+        
     }
 }

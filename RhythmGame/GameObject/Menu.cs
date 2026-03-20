@@ -7,8 +7,10 @@ using System.Text;
 class Menu : GameObject
 {
     private string[] _menu = { "젓가락 행진곡", "월광", "돌아가기" };
+
     private int _selectedIndex = 0;
     public int SelectedIndex { get { return _selectedIndex; } }
+    public sounds SelectedSound { get; set;  }
     public Menu(Scene scene) : base(scene) { Name = "Menu"; }
     public override void Update(float deltaTime)
     {
