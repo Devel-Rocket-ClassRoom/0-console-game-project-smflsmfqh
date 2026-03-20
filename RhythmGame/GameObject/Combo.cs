@@ -13,25 +13,33 @@ class Combo : GameObject
     private int j_scale;
     private ComboEnum _lastJudge = ComboEnum.None;
     private int _displayTime = 0;
-    private string[] _pArt =
-    {
+    private string[] perfect = {
+    @"  ___          __        _   _ ",
+    @" | _ \___ _ _ / _|___ __| |_| |",
+    @" |  _/ -_) '_|  _/ -_) _|  _|_|",
+    @" |_| \___|_| |_| \___\__|\__(_) ",
+   };
+    private string[] good = {
+    @"   ___              _ _ ",
+    @"  / __|___  ___  __| | |",
+    @" | (_ / _ \/ _ \/ _` |_|",
+    @"  \___\___/\___/\__,_(_)",
+   };
 
+    private string[] bad = {
+    @" ___          _ _ ",
+    @" | _ ) __ _ __| | |",
+    @" | _ \/ _` / _` |_|",
+    @" |___/\__,_\__,_(_)",
+   };
+
+    private string[] miss = {
+    @"  __  __ _       _ ",
+    @" |  \/  (_)_____| |",
+    @" | |\/| | (_-<_-<_|",
+    @" |_|  |_|_/__/__(_)",
     };
 
-    private string[] _gArt =
-    {
-
-    };
-
-    private string[] _bArt =
-    {
-
-    };
-
-    private string[] _mArt =
-    {
-
-    };
 
     public Combo(Scene scene) : base(scene)
     {
@@ -46,6 +54,7 @@ class Combo : GameObject
         if (combo == ComboEnum.Miss)
         {
             _miss++;
+            _score -= 5;
             return;
         }
         if (combo == ComboEnum.Perfect)
@@ -78,19 +87,27 @@ class Combo : GameObject
     }
     public override void Draw(ScreenBuffer buffer)
     {
+        string[][] comboStrings = { perfect, good, bad, miss };
+
         if (_displayTime > 0)
         {
-            if (_lastJudge == ComboEnum.Miss)
+            for (int i = 0; i < comboStrings.Length; i++)
             {
-                buffer.WriteText(18, 25, _lastJudge.ToString(), ConsoleColor.Red);
+                if ((int)_lastJudge == i)
+                {
+                    if (i == 3 || i == 2) { buffer.WriteLines(10, 23, comboStrings[i], ConsoleColor.Red); }
+                    else if (i == 1) { buffer.WriteLines(8, 23, comboStrings[i], ConsoleColor.Cyan); }
+                    else if (i == 0) { buffer.WriteLines(5, 23, comboStrings[i], ConsoleColor.Green); }
+                    else { buffer.WriteLines(8, 23, comboStrings[i], ConsoleColor.Gray); }
+                }
             }
-            else buffer.WriteText(18, 25, _lastJudge.ToString(), ConsoleColor.Cyan);
         }
 
-        buffer.WriteText(42, 3, $"Score: {_score}", ConsoleColor.White);
-        buffer.WriteText(42, 5, $"Perfect Combo: {_perfect}", ConsoleColor.White);
-        buffer.WriteText(42, 6, $"Good Combo: {_good}", ConsoleColor.White);
-        buffer.WriteText(42, 7, $"Bad Combo: {_bad}", ConsoleColor.White);
+        buffer.WriteText(42, 21, $"Score: {_score}", ConsoleColor.White);
+        buffer.WriteText(42, 23, $"Perfect Combo: {_perfect}", ConsoleColor.White);
+        buffer.WriteText(42, 24, $"Good Combo: {_good}", ConsoleColor.White);
+        buffer.WriteText(42, 25, $"Bad Combo: {_bad}", ConsoleColor.White);
+        buffer.WriteText(42, 26, $"Miss Combo: {_miss}", ConsoleColor.White);
            
     }
 }

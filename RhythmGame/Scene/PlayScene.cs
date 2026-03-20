@@ -26,9 +26,7 @@ class PlayScene : Scene
         _combo = new Combo(this);
         AddGameObject(_combo);
 
-        InitalizeLane(4);
-
-        
+        InitalizeLane(4);    
     }
 
     public override void Unload()
@@ -47,13 +45,26 @@ class PlayScene : Scene
     }
     private void HandlingInput(int currentTime)
     {
+        ComboEnum combo;
         for (int i = 0; i < _lanes.Length; i++)
         {
             if (Input.IsKeyDown(_laneKeys[i]))
             {
-                ComboEnum combo = _lanes[i].CalculateMatched(currentTime);
-                _combo.ReadyPritingCombo(combo);   
+                combo = _lanes[i].CalculateMatched(currentTime);
+                if (combo != ComboEnum.None)
+                {
+                    _combo.ReadyPritingCombo(combo);
+                }
             }
+            else
+            {
+                combo = _lanes[i].MissingNote(currentTime);
+                if (combo == ComboEnum.Miss)
+                {
+                    _combo.ReadyPritingCombo(combo);
+                }
+            }
+           
         }
     }
 

@@ -70,6 +70,7 @@ class TitleScene : Scene
     }
     public override void Draw(ScreenBuffer buffer)
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8; // 블럭 인코딩 용
         for (int i = 0; i < _mainTitle.Length; i++)
         {
             buffer.WriteText(4, 5 + i, _mainTitle[i], _colors[(i + _colorOffset) % _colors.Length]);
