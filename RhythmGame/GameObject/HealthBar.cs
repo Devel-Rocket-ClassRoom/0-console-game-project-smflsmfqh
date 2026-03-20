@@ -8,6 +8,7 @@ class HealthBar : GameObject
     private int _displayTime = 0;
     private int _health = 0;
     private int _yCoordinate = 19;
+    public int Health {  get { return _health; } }
     public HealthBar(Scene scene) : base(scene)
     {
 

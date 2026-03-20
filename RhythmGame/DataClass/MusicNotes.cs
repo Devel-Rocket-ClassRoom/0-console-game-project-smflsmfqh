@@ -1,9 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-
-// 임의로 하드 코딩 -> 여유 있으면 음악별로 노트 데이터파일 만들기
 
 class MusicNotes
 {

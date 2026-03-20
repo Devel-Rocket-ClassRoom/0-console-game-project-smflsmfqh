@@ -16,6 +16,7 @@ class PlayScene : Scene
     private Stopwatch _stopWatch = new Stopwatch();
     private HealthBar _healthBar;
     private WAVPlayer _player;
+
     private bool isGameOver;
 
     private int _selectedMusic;
@@ -73,6 +74,14 @@ class PlayScene : Scene
             AddGameObject(_lanes[i]);
         }
     }
+    private void IsAlive(int currentTime)
+    {
+        if (currentTime >= 5000 && _healthBar.Health == 0)
+        {
+            isGameOver = true;  
+        }
+       
+    }
 
     private bool IsStageEmpty()
     {
@@ -123,9 +132,6 @@ class PlayScene : Scene
             return;
         }
 
-        //int currentTime = (int)_stopWatch.ElapsedMilliseconds;
-
-         
         UpdateGameObjects(deltaTime);
         int currentTime = (int)_player.GetCurrentMs();
         foreach (Lane lane in _lanes)
@@ -133,15 +139,15 @@ class PlayScene : Scene
             lane.LookaheadNotes(currentTime);
         }
         HandlingInput(currentTime);
+        IsAlive(currentTime);
+
+        
         IsStageEmpty();
 
     }
     public override void Draw(ScreenBuffer buffer)
     {
         DrawGameObjects(buffer);
-        //buffer.WriteTextCentered(10, ((int)_player.GetTotalMs()).ToString(), ConsoleColor.White);
-       // buffer.WriteTextCentered(11, ((int)_player.GetCurrentMs()).ToString(), ConsoleColor.White);
-
 
     }
 }
