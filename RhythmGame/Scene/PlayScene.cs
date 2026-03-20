@@ -13,7 +13,6 @@ class PlayScene : Scene
 
     private MatchedLine _matchedNote;
     private Combo _combo;
-    private MusicNotes _notes = new MusicNotes();
     private Stopwatch _stopWatch = new Stopwatch();
     private HealthBar _healthBar;
     private WAVPlayer _player;
@@ -40,7 +39,7 @@ class PlayScene : Scene
         _combo = new Combo(this);
         AddGameObject(_combo);
 
-        InitalizeLane(4);    
+        InitalizeLane(4);    // Lane Create
 
         _healthBar = new HealthBar(this);   
         AddGameObject(_healthBar);
@@ -70,7 +69,7 @@ class PlayScene : Scene
         _lanes = new Lane[n];
         for (int i = 0; i < n; i++)
         {
-            _lanes[i] = new Lane(this, i, _notes);
+            _lanes[i] = new Lane(this, i, _selectedMusic);
             AddGameObject(_lanes[i]);
         }
     }
@@ -105,14 +104,12 @@ class PlayScene : Scene
                     _combo.ReadyPritingCombo(combo);
                 }
             }
-            else
-            {
-                combo = _lanes[i].MissingNote(currentTime);
-                if (combo == ComboEnum.Miss)
-                {
-                    _combo.ReadyPritingCombo(combo);
-                }
-            }
+              combo = _lanes[i].MissingNote(currentTime);
+              if (combo == ComboEnum.Miss)
+              {
+                  _combo.ReadyPritingCombo(combo);
+              }
+            
             _healthBar.ScaleHealth(_combo.Score);
         }
     }
@@ -126,10 +123,11 @@ class PlayScene : Scene
             return;
         }
 
-        int currentTime = (int)_stopWatch.ElapsedMilliseconds;
+        //int currentTime = (int)_stopWatch.ElapsedMilliseconds;
 
+         
         UpdateGameObjects(deltaTime);
-
+        int currentTime = (int)_player.GetCurrentMs();
         foreach (Lane lane in _lanes)
         {
             lane.LookaheadNotes(currentTime);
@@ -141,6 +139,9 @@ class PlayScene : Scene
     public override void Draw(ScreenBuffer buffer)
     {
         DrawGameObjects(buffer);
-        
+        //buffer.WriteTextCentered(10, ((int)_player.GetTotalMs()).ToString(), ConsoleColor.White);
+       // buffer.WriteTextCentered(11, ((int)_player.GetCurrentMs()).ToString(), ConsoleColor.White);
+
+
     }
 }

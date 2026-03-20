@@ -112,10 +112,10 @@ class Combo : GameObject
             {
                 if ((int)_lastJudge == i)
                 {
-                    if (i == 3 || i == 2) { buffer.WriteLines(10, 23, comboStrings[i], ConsoleColor.Red); }
+                    if (i == 3) { buffer.WriteLines(10, 23, comboStrings[i], ConsoleColor.Red); }
                     else if (i == 1) { buffer.WriteLines(8, 23, comboStrings[i], ConsoleColor.Cyan); }
                     else if (i == 0) { buffer.WriteLines(5, 23, comboStrings[i], ConsoleColor.Green); }
-                    else { buffer.WriteLines(8, 23, comboStrings[i], ConsoleColor.Gray); }
+                    else { buffer.WriteLines(8, 23, comboStrings[i], ConsoleColor.Magenta); }
                 }
             }
         }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 //  Lane 0: 1~9, Lane1: 11 ~ 19, Lane2: 20 ~ 29, Lane3: 30 ~ 39
 class Lane : GameObject
 {
+    private MusicNotes _notes;
     private LinkedList<Note> _stagingNotes = new LinkedList<Note>();
     private LinkedList<Note> _fallingNotes = new LinkedList<Note>();
 
@@ -13,13 +14,17 @@ class Lane : GameObject
     public int Count { get { return _stagingNotes.Count; } }
 
     private const int k_MatchedLineY = 20;
-    private const float k_MoveInterval = 0.008f;
+    private const float k_MoveInterval = 0.017f;
 
-    public Lane(Scene scene, int lane, MusicNotes notes) : base(scene)
+    private float keyOmissscale;
+    private float keyXmissscale;
+
+    public Lane(Scene scene, int lane, int musicIndex) : base(scene)
     {
         Name = "Lane";
         _laneId = lane;
-        Initalize(_laneId, notes);
+        _notes = new MusicNotes(musicIndex);
+        Initalize(_laneId, _notes);
     }
 
     private LinkedList<Note> Initalize(int lane, MusicNotes notes)
@@ -61,7 +66,7 @@ class Lane : GameObject
 
     private float CalculateY(int currentTime, Note note)
     {
-        float y = (int)(k_MatchedLineY - (note.TargetTime - currentTime) * k_MoveInterval);
+        float y = k_MatchedLineY - (note.TargetTime - currentTime) * k_MoveInterval;
 
         return y;
     }
@@ -77,28 +82,31 @@ class Lane : GameObject
 
         Note fallingNote = PeekAFallingNote();
         float y = CalculateY(currentTime, fallingNote);
-        float scale = Math.Abs(y - k_MatchedLineY);
+        int scale = Math.Abs(currentTime - fallingNote.TargetTime);
+        float yScale = Math.Abs(k_MatchedLineY - y);
 
-        if (scale > 2)
+        if (scale > 220) // yScale > 2.2
         {
             result = ComboEnum.None;
             return result;
         }
-        if (scale <= 0.5)
+        if (scale <= 90 ) 
         {
             result = ComboEnum.Perfect;
         }
-        else if (scale <= 1)
+        else if (scale <= 140 )
         {
             result = ComboEnum.Good;
         }
-        else if (scale <= 1.5)
+        else if (scale <= 190 )
         {
             result = ComboEnum.Bad;
         }
         else
         {
             result = ComboEnum.Miss;
+            keyOmissscale = scale;
+            //y_missscale = yScale;
         }
 
         _stagingNotes.Remove(fallingNote);
@@ -111,16 +119,22 @@ class Lane : GameObject
     {
         if (_fallingNotes.Count == 0) { return ComboEnum.None; }
         Note fallingNote = PeekAFallingNote();
-        float y = CalculateY(currentTime, fallingNote);
-        float scale = y - k_MatchedLineY;
+        //float y = CalculateY(currentTime, fallingNote);
+        int scale = currentTime - fallingNote.TargetTime;
+        //float yScale = k_MatchedLineY - y;
 
-        if (scale < 1.2 && scale > 0)
-        {
+        ComboEnum comboEnum = ComboEnum.None;
+       
+        if (scale > 190)
+        { 
             _stagingNotes.Remove(fallingNote);
             _fallingNotes.RemoveFirst();
-            return ComboEnum.Miss;
+            comboEnum = ComboEnum.Miss;
+            keyXmissscale = scale;
+            
         }
-        return ComboEnum.None;
+        
+        return comboEnum;
     }
 
     private Note PeekAFallingNote()
@@ -148,5 +162,9 @@ class Lane : GameObject
             }
             node = node.Next;
         }
+        buffer.WriteTextCentered(10, keyOmissscale.ToString(), ConsoleColor.White);
+        buffer.WriteTextCentered(11, keyXmissscale.ToString(), ConsoleColor.White);
+
+
     }
 }
