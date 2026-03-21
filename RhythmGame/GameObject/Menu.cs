@@ -54,7 +54,7 @@ class Menu : GameObject
                 prefix = "  ";
             }
             
-            buffer.WriteTextCentered(10+i, prefix + _menu[i], fg, bg);
+            buffer.WriteTextCentered(16+i, prefix + _menu[i], fg, bg);
         }
         
     }

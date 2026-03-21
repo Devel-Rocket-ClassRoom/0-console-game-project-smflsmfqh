@@ -18,11 +18,11 @@ class PlayScene : Scene
     private WAVPlayer _player;
 
     private bool isGameOver;
-
+    private bool isGameSuccess; 
     private int _selectedMusic;
 
-    public event GameAction<int> PlayAgainRequested;
     public event GameAction<int> GameOverRequested;
+    public event GameAction<int, int, int, int, int, int> GameSuccessRequested;  
 
     public PlayScene(int index)
     {
@@ -95,9 +95,9 @@ class PlayScene : Scene
         }
         if (empty == 4)
         {
-            isGameOver = true;
+            isGameSuccess = true;
         }
-        return isGameOver;
+        return isGameSuccess;   
     }
 
     private void HandlingInput(int currentTime)
@@ -132,6 +132,13 @@ class PlayScene : Scene
             return;
         }
 
+        if (IsStageEmpty())
+        {
+            Thread.Sleep(2000);
+            GameSuccessRequested?.Invoke(_selectedMusic, _combo.Score, _combo.Perfect, _combo.Good, _combo.Bad, _combo.Miss);
+            return;
+        }
+
         UpdateGameObjects(deltaTime);
         int currentTime = (int)_player.GetCurrentMs();
         foreach (Lane lane in _lanes)
@@ -142,7 +149,7 @@ class PlayScene : Scene
         IsAlive(currentTime);
 
         
-        IsStageEmpty();
+        
 
     }
     public override void Draw(ScreenBuffer buffer)

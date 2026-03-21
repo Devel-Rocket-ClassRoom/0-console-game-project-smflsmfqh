@@ -41,6 +41,11 @@ class Combo : GameObject
     };
 
     public int Score { get { return _score; } private set { } }
+    public int Perfect { get { return _perfect; } private set { } } 
+    public int Good { get { return _good; } private set { } }   
+    public int Bad { get { return _bad; } private set { } } 
+    public int Miss { get { return _miss; } private set { } }   
+
     public Combo(Scene scene) : base(scene)
     {
         Name = "Combo";
@@ -48,11 +53,7 @@ class Combo : GameObject
 
     private int ScaleScore()
     {
-        if (_score > 100)
-        {
-            _score = 100;
-        }
-        else if (_score < 0)
+        if (_score < 0)
         {
             _score = 0;
         }
@@ -67,7 +68,7 @@ class Combo : GameObject
         if (combo == ComboEnum.Miss)
         {
             _miss++;
-            _score -= 5;
+            _score -= 7;
             ScaleScore();
             return;
         }

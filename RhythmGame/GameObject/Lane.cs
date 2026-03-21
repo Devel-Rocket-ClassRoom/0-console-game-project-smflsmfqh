@@ -16,9 +16,6 @@ class Lane : GameObject
     private const int k_MatchedLineY = 20;
     private const float k_MoveInterval = 0.017f;
 
-    //private float keyOmissscale;
-    //private float keyXmissscale;
-
     public Lane(Scene scene, int lane, int musicIndex) : base(scene)
     {
         Name = "Lane";
@@ -56,8 +53,13 @@ class Lane : GameObject
         foreach (Note note in _fallingNotes)
         {
             int y = (int)CalculateY(currentTime, note);
+        
             if (y <= k_MatchedLineY)
             {
+                if (y == 0)
+                {
+                    y += 1;
+                }
                 note.coordinate = (x, y);
             }
         }
@@ -160,9 +162,6 @@ class Lane : GameObject
             }
             node = node.Next;
         }
-        //buffer.WriteTextCentered(10, keyOmissscale.ToString(), ConsoleColor.White);
-       // buffer.WriteTextCentered(11, keyXmissscale.ToString(), ConsoleColor.White);
-
-
+        
     }
 }

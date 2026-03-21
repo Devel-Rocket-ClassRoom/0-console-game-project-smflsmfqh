@@ -31,19 +31,13 @@ class GameOverScene : Scene
 
     private ConsoleColor[] _colors =
     {
-        ConsoleColor.Yellow,
-        ConsoleColor.DarkYellow,
-        ConsoleColor.Green,
-        ConsoleColor.DarkGreen,
-        ConsoleColor.Cyan,
-        ConsoleColor.DarkCyan,
-        ConsoleColor.Blue,
-        ConsoleColor.DarkBlue,
+        
+        
         ConsoleColor.Magenta,
         ConsoleColor.DarkMagenta,
         ConsoleColor.Red,
         ConsoleColor.DarkRed,
-        ConsoleColor.Gray,
+        
     };
     private float _colorTimer;
     private float _colorSpeed = 0.1f;
@@ -73,7 +67,7 @@ class GameOverScene : Scene
             _colorOffset++;
             _colorTimer = 0;
         }
-        if (Input.IsKeyDown(ConsoleKey.Escape))
+        if (Input.IsKeyDown(ConsoleKey.LeftArrow))
         {
             BackToMenuRequested?.Invoke();
         }
@@ -90,7 +84,7 @@ class GameOverScene : Scene
             buffer.WriteText(13, 5 + i, _gameOver[i], _colors[(i + _colorOffset) % _colors.Length]);
         }
         buffer.WriteTextCentered(20, "Press ENTER to Retry!", ConsoleColor.Black, ConsoleColor.White);
-        buffer.WriteTextCentered(22, "ESC: Quit", ConsoleColor.Red);
+        buffer.WriteTextCentered(22, "← to select the music", ConsoleColor.Red);
 
     }
 }

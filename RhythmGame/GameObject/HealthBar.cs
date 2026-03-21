@@ -17,7 +17,7 @@ class HealthBar : GameObject
     public int ScaleHealth(int score)
     {
         _displayTime = 300;
-        _health = (score * _yCoordinate) / 100;
+        _health = (score * (_yCoordinate - 3)) / 100;
         return _health;
     }
 

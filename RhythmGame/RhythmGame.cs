@@ -48,8 +48,8 @@ public class RhythmGame : GameApp
     private void ChangeToPlay(int index)
     {
         var play = new PlayScene(index);
-        //play.PlayAgainRequested += ChangeToPlay;
         play.GameOverRequested += ChangeToGameOver; 
+        play.GameSuccessRequested += ChangeToGameSuccess;   
         _scenes.ChangeScene(play);
     }
 
@@ -60,5 +60,13 @@ public class RhythmGame : GameApp
         gameOver.PlayAgainRequested += ChangeToPlay;
         _scenes.ChangeScene(gameOver);
     }
-    
+
+    private void ChangeToGameSuccess(int index, int totalScore, int perfectCount, int goodCount, int badCount, int missCount)
+    {
+        var gameSuccess = new GameSuccessScene(index, totalScore, perfectCount, goodCount, badCount, missCount);
+        gameSuccess.BackToMenuRequested += ChangeToMenu;
+        gameSuccess.PlayAgainRequested += ChangeToPlay;
+        _scenes.ChangeScene(gameSuccess);
+    }   
+
 }
