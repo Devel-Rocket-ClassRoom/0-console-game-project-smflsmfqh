@@ -93,6 +93,11 @@ class MenuSelectScene : Scene
         {
             buffer.WriteText(4, 5 + i, _menuArt[i], _colors[(i + _colorOffset) % _colors.Length]);
         }
+        buffer.WriteText(5, 22, "[Key Info]", ConsoleColor.Black, ConsoleColor.Yellow);
+        buffer.WriteText(5, 23, "Controls", ConsoleColor.Yellow);
+        buffer.WriteText(5, 24, "\t  D\tF\tJ\tK",  ConsoleColor.Magenta);
+        buffer.WriteText(5, 25, "\t  ↓\t↓\t↓\t↓",  ConsoleColor.Gray);
+        buffer.WriteText(5, 26, "Lane: 0\t 1\t 2\t 3",  ConsoleColor.White);
     }
 
 }
