@@ -1,4 +1,4 @@
 using System;
-using Framework.Engine;
 
+// --- 게임 시작 ---
 new RhythmGame().Run();

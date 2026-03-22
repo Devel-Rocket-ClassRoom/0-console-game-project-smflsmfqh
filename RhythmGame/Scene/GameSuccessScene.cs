@@ -3,13 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+// --- 게임 성공 씬 ---
+// 생성자 매개변수로 점수들을 받아 출력
 class GameSuccessScene : Scene
 {
     private int _selectedMusic;
-    private int _totalScore;    
+    private int _totalScore;
     private int _perfectCount;
     private int _goodCount;
-    private int _badCount;  
+    private int _badCount;
     private int _missCount;
 
     private string[] _successArt =
@@ -31,7 +33,7 @@ class GameSuccessScene : Scene
         ConsoleColor.DarkCyan,
         ConsoleColor.Blue,
         ConsoleColor.DarkBlue,
-   
+
     };
 
     private float _colorTimer;
@@ -47,7 +49,7 @@ class GameSuccessScene : Scene
     {
         _selectedMusic = index;
         _totalScore = totalScore;
-        _perfectCount = perfectCount;   
+        _perfectCount = perfectCount;
         _goodCount = goodCount;
         _badCount = badCount;
         _missCount = missCount;

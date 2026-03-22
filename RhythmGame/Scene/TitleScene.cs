@@ -1,7 +1,7 @@
 using Framework.Engine;
 using System;
-using System.Collections.Generic;
 
+// --- 게임 타이틀 씬 ---
 class TitleScene : Scene
 {
     public event GameAction StartRequested;

@@ -4,33 +4,30 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 
+// --- 게임 플레이 씬 ---
 class PlayScene : Scene
 {
     private Stage _stage;
-
-    private Lane[] _lanes;
+    private Lane[] _lanes; // 레인 배열: _lanes[0] = Lane 0, _lanes[1] = Lane 1, _lanes[2] = Lane 2, _lanes[3] = Lane 3
     private ConsoleKey[] _laneKeys = { ConsoleKey.D, ConsoleKey.F, ConsoleKey.J, ConsoleKey.K };
-
     private MatchedLine _matchedNote;
     private Combo _combo;
-    private Stopwatch _stopWatch = new Stopwatch();
     private HealthBar _healthBar;
     private WAVPlayer _player;
-
     private bool isGameOver;
-    private bool isGameSuccess; 
+    private bool isGameSuccess;
     private int _selectedMusic;
+    private float _gameEndTimer;
+    public event GameAction<int> GameOverRequested; // 게임 오버 씬 호출 이벤트
+    public event GameAction<int, int, int, int, int, int> GameSuccessRequested; // 게임 성공 씬 호출 이벤트
 
-    public event GameAction<int> GameOverRequested;
-    public event GameAction<int, int, int, int, int, int> GameSuccessRequested;  
-
+    // --- 생성자 메서드 ---
     public PlayScene(int index)
     {
-        _selectedMusic = index; 
+        _selectedMusic = index;
     }
     public override void Load()
     {
-        _stopWatch.Start();
         _stage = new Stage(this);
         AddGameObject(_stage);
 
@@ -40,12 +37,12 @@ class PlayScene : Scene
         _combo = new Combo(this);
         AddGameObject(_combo);
 
-        InitalizeLane(4);    // Lane Create
+        InitalizeLane(4);
 
-        _healthBar = new HealthBar(this);   
+        _healthBar = new HealthBar(this);
         AddGameObject(_healthBar);
 
-        
+        // 선택된 노래에 따라 음악 플레이
         if (_selectedMusic == 0)
         {
             _player = new WAVPlayer(sounds.Chopstick);
@@ -55,7 +52,6 @@ class PlayScene : Scene
             _player = new WAVPlayer(sounds.Moonlight);
         }
         _player.Play();
-
     }
 
     public override void Unload()
@@ -65,6 +61,7 @@ class PlayScene : Scene
         ClearGameObjects();
     }
 
+    // --- 레인 배열 초기화 메서드 ---
     private void InitalizeLane(int n)
     {
         _lanes = new Lane[n];
@@ -74,15 +71,20 @@ class PlayScene : Scene
             AddGameObject(_lanes[i]);
         }
     }
+
+    // --- isGameOver 변수 검사 및 할당 메서드 ---
+    // 게임 플레이 시간 5초 이상인데 health == 0 -> 게임 오버
     private void IsAlive(int currentTime)
     {
         if (currentTime >= 5000 && _healthBar.Health == 0)
         {
-            isGameOver = true;  
+            isGameOver = true;
         }
-       
     }
 
+
+    // --- 레인에 남은 노트가 있는지 검사하는 메서드 ---
+    // _stagingNotes.Count +  _fallintNotes.Count == 0이면 남아있는 노트가 없음 => 게임 종료(성공)
     private bool IsStageEmpty()
     {
         int empty = 0;
@@ -97,9 +99,12 @@ class PlayScene : Scene
         {
             isGameSuccess = true;
         }
-        return isGameSuccess;   
+        return isGameSuccess;
     }
 
+    // --- 사용자 입력 다루는 메서드 ---
+    // 현재 시간을 매개변수로 받아서 노트 판정 및 노트 판정 결과 출력 준비
+    // 갱신되는 스코어에 따라 헬스 조절
     private void HandlingInput(int currentTime)
     {
         ComboEnum combo;
@@ -113,43 +118,49 @@ class PlayScene : Scene
                     _combo.ReadyPritingCombo(combo);
                 }
             }
-              combo = _lanes[i].MissingNote(currentTime);
-              if (combo == ComboEnum.Miss)
-              {
-                  _combo.ReadyPritingCombo(combo);
-              }
-            
+            combo = _lanes[i].MissingNote(currentTime);
+            if (combo == ComboEnum.Miss)
+            {
+                _combo.ReadyPritingCombo(combo);
+            }
+
             _healthBar.ScaleHealth(_combo.Score);
         }
     }
 
     public override void Update(float deltaTime)
     {
+        // 게임 오버되면 게임 오버 씬으로
         if (isGameOver)
         {
-            Thread.Sleep(2000);
-            GameOverRequested?.Invoke(_selectedMusic);
+            _gameEndTimer += deltaTime;
+            if (_gameEndTimer >= 2f)
+            {
+                GameOverRequested?.Invoke(_selectedMusic);
+            }
             return;
         }
 
+        // 노트 다 사용되면 게임 성공 씬으로
         if (IsStageEmpty())
         {
-            Thread.Sleep(2000);
-            GameSuccessRequested?.Invoke(_selectedMusic, _combo.Score, _combo.Perfect, _combo.Good, _combo.Bad, _combo.Miss);
+            _gameEndTimer += deltaTime;
+            if (_gameEndTimer >= 2f)
+            {
+                GameSuccessRequested?.Invoke(_selectedMusic, _combo.Score, _combo.Perfect, _combo.Good, _combo.Bad, _combo.Miss);
+            }
             return;
         }
 
         UpdateGameObjects(deltaTime);
-        int currentTime = (int)_player.GetCurrentMs();
+
+        int currentTime = (int)_player.GetCurrentMs(); // 재생되는 노래를 기준으로 현재 시간 가져옴(= 현재 재생 시점의 시간)
         foreach (Lane lane in _lanes)
         {
             lane.LookaheadNotes(currentTime);
         }
         HandlingInput(currentTime);
         IsAlive(currentTime);
-
-        
-        
 
     }
     public override void Draw(ScreenBuffer buffer)

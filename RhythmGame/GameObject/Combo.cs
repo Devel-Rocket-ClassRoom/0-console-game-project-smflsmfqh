@@ -1,16 +1,18 @@
 using Framework.Engine;
 using System;
-using System.Collections.Generic;
 
+// --- 판정 결과 출력과 점수 관리 오브젝트 ---
+// _lastJudge로 매 프레임 판정 결과를 저장 및 출력
+// _displayTime으로 판정 결과 출력 지속 시간 조절
 class Combo : GameObject
 {
     private int _score;
 
     private int _perfect;
     private int _good;
-    private int _bad;   
+    private int _bad;
     private int _miss;
-   
+
     private ComboEnum _lastJudge = ComboEnum.None;
     private int _displayTime = 0;
     private string[] perfect = {
@@ -40,30 +42,32 @@ class Combo : GameObject
     @" |_|  |_|_/__/__(_)",
     };
 
-    public int Score { get { return _score; } private set { } }
-    public int Perfect { get { return _perfect; } private set { } } 
-    public int Good { get { return _good; } private set { } }   
-    public int Bad { get { return _bad; } private set { } } 
-    public int Miss { get { return _miss; } private set { } }   
+    public int Score { get { return _score; }  }
+    public int Perfect { get { return _perfect; }  }
+    public int Good { get { return _good; } }
+    public int Bad { get { return _bad; } }
+    public int Miss { get { return _miss; }  }
 
+    // --- 생성자 ---
     public Combo(Scene scene) : base(scene)
     {
         Name = "Combo";
     }
 
-    private int ScaleScore()
+    // --- 점수가 음수일 때 범위 조정 메서드 --- 
+    private void ScaleScore()
     {
         if (_score < 0)
         {
             _score = 0;
         }
-        return _score;
     }
 
+    // --- _lastJudge 갱신 메서드 ---
     public void ReadyPritingCombo(ComboEnum combo)
     {
         _lastJudge = combo;
-        _displayTime = 500;
+        _displayTime = 500; // _lastJudge 출력 지속 시간 타이머(ms)
 
         if (combo == ComboEnum.Miss)
         {
@@ -76,22 +80,22 @@ class Combo : GameObject
         {
             _perfect++;
             _score += 7;
-            ScaleScore();
+
             return;
         }
         if (combo == ComboEnum.Good)
         {
             _good++;
             _score += 4;
-            ScaleScore();
+
             return;
         }
         if (combo == ComboEnum.Bad)
         {
             _bad++;
             _score += 2;
-            ScaleScore();
-            return; 
+
+            return;
         }
     }
 
@@ -99,13 +103,14 @@ class Combo : GameObject
     {
         if (_displayTime > 0)
         {
-            _displayTime -= (int)deltaTime * 1000;
+            _displayTime -= (int)(deltaTime * 1000);
         }
-        
     }
+
+    // --- _displayTime 동안 콤보 판정 결과 출력 ---
     public override void Draw(ScreenBuffer buffer)
     {
-        string[][] comboStrings = { perfect, good, bad, miss };
+        string[][] comboStrings = { perfect, good, bad, miss }; // 각 콤보에 해당하는 아스키 아트를 담은 문자열 배열의 배열
 
         if (_displayTime > 0)
         {
@@ -120,12 +125,13 @@ class Combo : GameObject
                 }
             }
         }
-
+        
+        // 점수 출력
         buffer.WriteText(42, 21, $"Score: {_score}", ConsoleColor.White);
         buffer.WriteText(42, 23, $"Perfect Combo: {_perfect}", ConsoleColor.White);
         buffer.WriteText(42, 24, $"Good Combo: {_good}", ConsoleColor.White);
         buffer.WriteText(42, 25, $"Bad Combo: {_bad}", ConsoleColor.White);
         buffer.WriteText(42, 26, $"Miss Combo: {_miss}", ConsoleColor.White);
-           
+
     }
 }

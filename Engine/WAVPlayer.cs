@@ -1,8 +1,11 @@
 ﻿using System;
 using NAudio.Wave;
 
+// --- 오디오 엔진 ---
+// 코드 출처: https://rimugiri.tistory.com/entry/c-Console-%EC%9D%8C%EC%95%85-%EC%B6%9C%EB%A0%A5-%EB%B0%A9%EB%B2%95-wav-mp3
 namespace Framework.Engine
 {
+    // --- sounds enum -> 재생할 노래 선택 ---
     public enum sounds
     {
         Title,
@@ -18,7 +21,7 @@ namespace Framework.Engine
         WaveOutEvent outputDevice;
         public WAVPlayer(sounds sound)
         {
-            switch(sound)
+            switch (sound)
             {
                 case sounds.Title:
                     audioFilePath = "RhythmGame\\Assets\\0titleMusic.wav";
@@ -59,13 +62,13 @@ namespace Framework.Engine
             outputDevice.Volume = volume;
         }
 
-            // --- 현재 재생 위치 ---
+        // --- 현재 재생 위치 ---
         public double GetCurrentMs()
         {
             return audioFile.CurrentTime.TotalMilliseconds;
         }
 
-            // --- 곡 전체 길이 ---
+        // --- 곡 전체 길이 ---
         public double GetTotalMs()
         {
             return audioFile.TotalTime.TotalMilliseconds;

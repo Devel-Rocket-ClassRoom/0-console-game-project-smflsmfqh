@@ -2,6 +2,7 @@ using Framework.Engine;
 using NAudio.MediaFoundation;
 using System;
 
+// --- 음악 선택 메뉴 씬 ---
 class MenuSelectScene : Scene
 {
     private Menu menu;
@@ -35,7 +36,7 @@ class MenuSelectScene : Scene
 
     public event GameAction<int> PlayRequested;
     public event GameAction BackToTitleRequested;
-    
+
     public override void Load()
     {
         menu = new Menu(this);
@@ -61,15 +62,16 @@ class MenuSelectScene : Scene
             _colorOffset++;
             _colorTimer = 0;
         }
-
+        
+        // 다음 씬에서 음악 선택 인덱스를 같이 넘겨줌 -> 음악에 맞는 노트로 초기화하기 위함
         if (Input.IsKeyDown(ConsoleKey.Enter))
         {
-            if (menu.SelectedIndex == 0 )
+            if (menu.SelectedIndex == 0)
             {
                 PlayRequested?.Invoke(menu.SelectedIndex);
                 return;
             }
-            if (menu.SelectedIndex == 1 )
+            if (menu.SelectedIndex == 1)
             {
 
                 PlayRequested?.Invoke(menu.SelectedIndex);
@@ -77,27 +79,27 @@ class MenuSelectScene : Scene
             }
             if (menu.SelectedIndex == 2)
             {
-                BackToTitleRequested?.Invoke(); 
+                BackToTitleRequested?.Invoke();
             }
         }
-       
+
     }
-    
+
     public override void Draw(ScreenBuffer buffer)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8; // 블럭 인코딩 용
 
         DrawGameObjects(buffer);
-        
+
         for (int i = 0; i < _menuArt.Length; i++)
         {
             buffer.WriteText(4, 5 + i, _menuArt[i], _colors[(i + _colorOffset) % _colors.Length]);
         }
         buffer.WriteText(5, 22, "[Key Info]", ConsoleColor.Black, ConsoleColor.Yellow);
         buffer.WriteText(5, 23, "Controls", ConsoleColor.Yellow);
-        buffer.WriteText(5, 24, "\t  D\tF\tJ\tK",  ConsoleColor.Magenta);
-        buffer.WriteText(5, 25, "\t  ↓\t↓\t↓\t↓",  ConsoleColor.Gray);
-        buffer.WriteText(5, 26, "Lane: 0\t 1\t 2\t 3",  ConsoleColor.White);
+        buffer.WriteText(5, 24, "\t  D\tF\tJ\tK", ConsoleColor.Magenta);
+        buffer.WriteText(5, 25, "\t  ↓\t↓\t↓\t↓", ConsoleColor.Gray);
+        buffer.WriteText(5, 26, "Lane: 0\t 1\t 2\t 3", ConsoleColor.White);
     }
 
 }

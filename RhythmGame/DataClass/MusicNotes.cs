@@ -2,32 +2,43 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+// --- 노트 데이터의 컬렉션 ---
+// Queue<Note>를 요소를 가진 배열: _musicNotes
+// 각 요소는 레인별 노트 Queue에 해당함
+// Lane 0  = _musicNotes[0], Lane 1 = _musicNotes[1], Lane 2 = _musicNotes[2], Lane 3 = _musicNotes[3]
+
 class MusicNotes
 {
-    private Note[] notes;
-    private Queue<Note> _musicNotes;
-    public Queue<Note> Notes { get { return _musicNotes; } }
+    private Note[] _notes;
+    private Queue<Note>[] _musicNotes;
 
+    // --- 생성자 ---
+    // 인덱스를 받은 노래에 해당하는 노트로 _notes 초기화
+    // _musicNotes, 각 레인별로 Queue 초기화
     public MusicNotes(int index)
     {
-        ChoiceTheNotes(index); 
-        _musicNotes = new Queue<Note>(notes.Length);
+        for (int i = 0; i < 4; i++)
+        {
+            _musicNotes[i] = new Queue<Note>();
+        }
 
-        foreach (Note note in notes)
+        ChoiceTheNotes(index);
+
+        foreach (Note note in _notes)
         {
-            note.TargetTime += 110;
+            note.TargetTime += 110; // 노트 떨어지는 타이밍 수동 조절
+            _musicNotes[note.LaneId].Enqueue(note);
         }
-        foreach (Note note in notes)
-        {
-            _musicNotes.Enqueue(note);
-        }
-        
     }
+
+    // --- 선택한 노래에 따라 노트 초기화 분기 메서드 ---
+    // index == 0: 젓가락 행진곡
+    // index == 1: 월광 
     public void ChoiceTheNotes(int index)
     {
         if (index == 0)
         {
-            notes = new Note[]
+            _notes = new Note[]
             {
                 new Note { TargetTime = 1809, LaneId = 0 },
                 new Note { TargetTime = 2041, LaneId = 2 },
@@ -258,7 +269,7 @@ class MusicNotes
         }
         else if (index == 1)
         {
-            notes = new Note[]
+            _notes = new Note[]
             {
               new Note { TargetTime = 1230, LaneId = 2 },
                 new Note { TargetTime = 1438, LaneId = 3 },
@@ -519,11 +530,22 @@ class MusicNotes
         }
     }
 
+    // --- 각 레인 큐에 있는 노트 수 반환 메서드 ---
+    public int GetLaneCount(int laneId)
+    {
+        return _musicNotes[laneId].Count;
+    }
+
+    // --- 각 레인 큐 반환 메서드 ---
+    public Queue<Note> GetLaneQueue(int laneId)
+    {
+        return _musicNotes[laneId];
+    }
     public IEnumerator GetEnumerator()
     {
-        foreach (var note in  _musicNotes)
+        foreach (var note in _notes)
         {
-            yield return note;  
+            yield return note;
         }
     }
 

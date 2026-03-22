@@ -1,6 +1,8 @@
 using Framework.Engine;
 using System;
 
+// --- 유저가 입력한 레인 출력 오브젝트 ---
+// 유저가 레인에 해당하는 키를 입력할 때마다 가시적으로 나타냄
 class MatchedLine : GameObject
 {
     private const int k_MatchedLineY = 21;
@@ -11,7 +13,7 @@ class MatchedLine : GameObject
 
     }
     public override void Update(float deltaTime)
-    { 
+    {
         _matchedKey = -1;
 
         if (Input.IsKey(ConsoleKey.D))
@@ -34,7 +36,7 @@ class MatchedLine : GameObject
 
     public override void Draw(ScreenBuffer buffer)
     {
-       
+
         buffer.DrawHLine(1, k_MatchedLineY, 39, '-', ConsoleColor.White);
         buffer.FillRect(1, k_MatchedLineY, 39, 1, ' ', ConsoleColor.White, ConsoleColor.Yellow);
 
