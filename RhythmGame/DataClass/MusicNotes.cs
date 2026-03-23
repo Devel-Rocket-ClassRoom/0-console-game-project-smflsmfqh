@@ -17,6 +17,7 @@ class MusicNotes
     // _musicNotes, 각 레인별로 Queue 초기화
     public MusicNotes(int index)
     {
+        _musicNotes = new Queue<Note>[4];
         for (int i = 0; i < 4; i++)
         {
             _musicNotes[i] = new Queue<Note>();
